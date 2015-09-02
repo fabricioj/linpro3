@@ -6,7 +6,6 @@
 // Declaração de uma constante fora do escopo de uma classe
 define('MINHA_CONSTANTE', 'constante de teste');
 
-
 // Tipos de variáveis do PHP
 $inteiro = 100;              // Inteiro
 $decimal = 100.90;           // Decimal
