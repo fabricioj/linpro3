@@ -28,67 +28,67 @@ echo "<h3>Valor do dia de um trabalhador com salário de R$ {$salario_formatado}
 echo '<p>Fórmula: <b>(SALÁRIO / 30)</b></p>';
 echo '<p>Valor do dia: <b>R$ ' . $valor_do_dia_formatado . '</b></p>';
 
+// Vetores
 $prateleira = array();
 $prateleira[0] = 'Mouse';
 $prateleira[1] = 'Microfone';
 $prateleira[2] = 'Copo de água';
 
-
-$prateleira2 = array(
+$prateleira = array(
     'Mouse',
     'Microfone',
     'Copo de água'
 );
 
-//Matrizes
+// Matrizes
 $clientes = array();
-$clientes[] = array(
-    'nome'=>'Eduardo',
-    'telefone'=>'16 99999-9999',
-    'endereco'=>'Rua Ilario Alves de Freitas, 728'
-    
-);
 
 $clientes[] = array(
-    'nome'=>'José',
-    'telefone'=>'16 99999-0000',
-    'endereco'=>'Rua Foda-se, 728'
-    
+    'nome' => 'Eduardo',
+    'telefone' => '16 9999-9999',
+    'endereco' => 'Rua Ilario Alves de Freitas, 728'
+);
+$clientes[] = array(
+    'nome' => 'José',
+    'telefone' => '16 9999-0000',
+    'endereco' => 'Rua Rodrigo Freire, 999'
 );
 
 echo $clientes[0]['nome'];
 echo $clientes[0]['endereco'];
 
-$clientes2 = array(
+// Matrizes
+$clientes = array(
     array(
-        'nome'=>'José',
-        'telefone'=>'16 99999-0000',
-        'endereco'=>'Rua Foda-se, 728'
+        'nome' => 'Eduardo',
+        'telefone' => '16 9999-9999',
+        'endereco' => 'Rua Ilario Alves de Freitas, 728'
     ),
     array(
-        'nome'=>'Eduardo',
-        'telefone'=>'16 99999-9999',
-        'endereco'=>'Rua Ilario Alves de Freitas, 728'
+        'nome' => 'José',
+        'telefone' => '16 9999-0000',
+        'endereco' => 'Rua Rodrigo Freire, 999'
     )
 );
-Class Clientes{
-  public $nome;  
-  public $telefone;
-  public $endereco;
-    
-}
-//Classes genéricas
+
+// Classe Genérica
 $aluno = new stdClass();
 $aluno->nome = 'Eduardo';
-$aluno->endereco = 'Rua fulano';
-$aluno->telefone = '16 99999-8888';
-$aluno->teste = 'teste';
+$aluno->endereco = 'Rua fulano de tal';
 
-//Escopo da classe
+// Escopo da classe clientes
+class Clientes {
+    
+    public $nome;
+    
+    public $telefone;
+    
+    public $endereco;
+    
+}
+
+// Classe declarada
 $cliente = new Clientes();
-$cliente->nome = 'Fabricio';
-$cliente->endereco = 'Rua ciclano'; 
-$cliente->telefone = '18 9999-9999';
-$cliente->teste = '';
-
-echo '<br>' . $cliente->nome .' '. $cliente->endereco;
+$cliente->nome = 'Eduardo';
+$cliente->telefone;
+$cliente->endereco;
