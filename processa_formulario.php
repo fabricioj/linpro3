@@ -2,6 +2,7 @@
 class ProcessaFormulario{
    private $usuarios;
 
+   
    public function __construct() {
       $this->usuarios = array(
           array('usuario'=>'fabricio', 'senha'=>'e80fe219f85ebaccb7631283ae75b026'),
