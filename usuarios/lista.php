@@ -1,21 +1,11 @@
 <?php
-session_start();
-$usuarios = $_SESSION['usuarios'];
-
-
-
+   $pag_header = 'Usuários';
+   include '../includes/cabecalho.php';
+   
+   session_start();
+   $usuarios = isset($_SESSION['usuarios'])? $_SESSION['usuarios'] : array();   
 ?>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Página de Formulário</title>
-        <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-        <!-- Latest compiled and minified JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    </head>
-    <body>
+
         <div class="container">
             <div class="page-header">
                 <h1>Cadastro de Usuários</h1>
@@ -24,10 +14,10 @@ $usuarios = $_SESSION['usuarios'];
             <table class="table table-stripped table-hover">
                 <thead>
                     <tr>
-                        <th>cpf</th>
-                        <th>nome</th>
-                        <th>e-mail</th>
                         <th><a href="formulario.php" class="btn btn-primary">Novo</a></th>
+                        <th>Cpf</th>
+                        <th>Nome</th>
+                        <th>E-mail</th>                        
                      </tr>                                       
 
                 </thead>
@@ -35,14 +25,13 @@ $usuarios = $_SESSION['usuarios'];
                     <?php 
                     foreach ( $usuarios as $usuario) :?>
                         <tr>
+                            <td>
+                                <a href="formulario.php?cpf=<?php echo $usuario['cpf'];?>" class="btn btn-primary">Editar</a>
+                                <a href="processa.php?acao=excluir&cpf=<?php echo $usuario['cpf'];?>" class="btn btn-danger">Excluir</a>                        
+                            </td>
                             <td><?php echo $usuario['cpf']?></td>
                             <td><?php echo $usuario['nome']?></td>
                             <td><?php echo $usuario['email']?></td>
-
-                            <td>
-                                <button class="btn btn-primary">Editar</button>
-                                <button class="btn btn-danger">Excluir</button>                        
-                            </td>
                         </tr>
                     <?php endforeach; ?>
 
@@ -51,6 +40,4 @@ $usuarios = $_SESSION['usuarios'];
             </table>
 
         </div>
-        
-    </body>
-</html>
+<?php include '../includes/rodape.php';?>
