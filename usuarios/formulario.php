@@ -10,8 +10,11 @@
 <div class="jumbotron">
     <h2>Cadastro de Usuários</h2>
    <form action="processa.php?acao=salvar" method="post">
-
-       E-mail: <input type="text" name="email" id="email" value="<?php echo $usuario['email'];?>">
+<div class="input-group">
+    <label class="control-label" for="email">E-mail</label>
+    <input type="text" class="form-control" name="email" id="email" value="<?php echo $usuario['email'];?>">
+</div>
+       
        <br>
        Senha: <input type="text" name="senha" id="senha" value="<?php echo $usuario['senha'];?>">
        <br>
