@@ -1,16 +1,23 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Página de Formulário</title>
-    </head>
-    <body>
-        <form action="processa_login.php" method="post">
-            Usuário: <input type="text" name="usuario" id="usuario">
-            <br>
-            Senha: <input type="text" name="senha" id="senha">
-            <br>
-            <button type="submit">Enviar</button>
+<?php 
+   $pag_header = 'Acesso ao sistema';
+   include './includes/cabecalho.php';
+?> 
+    <div class="jumbotron">
+        <div class="page-header">
+            <h2><?php echo $pag_header;?></h2>
+        </div>
+        <form action="processa_login.php" method="post">            
+            <div class="form-group">
+                <label class="control-label" for="usuario">Usuário</label>
+                <input type="text" class="form-control" name="usuario" id="usuario">
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="senha">Senha</label>
+                <input type="text" class="form-control" name="senha" id="senha">
+            </div>
+            <button class="btn btn-primary" type="submit">Enviar</button>
         </form>
-    </body>
-</html>
+    </div>
+ <?php 
+    include './includes/rodape.php';
+ ?>
