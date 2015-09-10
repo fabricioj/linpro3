@@ -1,6 +1,6 @@
 <?php
 include '../includes/cabecalho.php';
-class UsuarioProcessa{
+class UsuarioProcessaSessao{
    public function __construct() {
 
       if (method_exists($this, $_GET['acao']))
@@ -15,22 +15,21 @@ class UsuarioProcessa{
       $cpf = $usuario['cpf'];
 
       if (strlen($cpf)!= 11 || ! is_numeric($cpf))
-          die('<div style="text-align: center" class="alert alert-danger" role="alert"> <span>Digite um CPF válido</span></div>');
+          die('Digite um CPF válido');
       // die termina a execução da aplicação processa.php no momento que é acionado.
 
 
-      $arquivo = fopen('../armazenamento/usuarios.csv', 'a+');
-      
-      /*foreach ($usuario as $atributos ){
-         $linha .= ($linha != "" ? ";" : ""). $atributos;        
-      }*/
-      
-      $linha = implode(";", $usuario);
-      
-      fwrite($arquivo, "\n{$linha}");
-      
-      fclose($arquivo);
-      
+      //Iniciar sessão
+      session_start();
+
+      //Sessão é entre o servidor e a nossa conexão, nenhum outro acesso carregara as mesmas informações.
+      $_SESSION['usuarios'][$cpf] = $usuario;
+      //$_SESSION = array();
+
+      echo '<pre>';
+      print_r( $_SESSION );
+      echo '</pre>';
+
       //Redirecionar para a página lista.php
       header('Location: lista.php');
       
@@ -45,4 +44,4 @@ class UsuarioProcessa{
    }
    
 }
-new UsuarioProcessa();
+new UsuarioProcessaSessao();

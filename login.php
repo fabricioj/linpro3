@@ -2,10 +2,10 @@
    $pag_header = 'Acesso ao sistema';
    include './includes/cabecalho.php';
 ?> 
+    <div class="page-header">
+        <h2><?php echo $pag_header;?></h2>
+    </div>
     <div class="jumbotron">
-        <div class="page-header">
-            <h2><?php echo $pag_header;?></h2>
-        </div>
         <form action="processa_login.php" method="post">            
             <div class="form-group">
                 <label class="control-label" for="usuario">Usuário</label>

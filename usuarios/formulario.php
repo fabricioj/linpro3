@@ -12,7 +12,7 @@
 </div>
 <div class="jumbotron">
     
-   <form action="processa.php?acao=salvar" method="post">
+    <form action="processa.php?acao=salvar" method="post">
         <div class="form-group">
             <label class="control-label" for="email">E-mail</label>
             <input type="text" class="form-control" name="email" id="email" value="<?php echo $usuario['email'];?>">

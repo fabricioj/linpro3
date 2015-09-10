@@ -1,4 +1,5 @@
 <?php
+include './includes/cabecalho.php';
 
 class Processalogin {
     
@@ -63,3 +64,4 @@ if ( $processa_form->verificar_login( $login['usuario'], $login['senha'] ) ) {
 } else {
     echo 'Usuário e senha inválidos!!!';
 }
+include './includes/rodape.php';

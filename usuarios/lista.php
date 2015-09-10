@@ -8,7 +8,7 @@
 
         <div class="container">
             <div class="page-header">
-                <h1>Cadastro de Usuários</h1>
+                <h2><?php echo $pag_header;?></h2>
             </div>
             
             <table class="table table-stripped table-hover">
