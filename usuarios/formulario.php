@@ -50,7 +50,7 @@
            <input type="text" class="form-control" name="cep" id="cep" value="<?php echo $usuario['cep'];?>">
        </div>
        <div class="form-group">
-           <label class="control-label" for="uf">Uf</label>
+           <label class="control-label" for="uf">UF</label>
            <input type="text" class="form-control" name="uf" id="uf" value="<?php echo $usuario['uf'];?>">
        </div>
 

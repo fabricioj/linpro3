@@ -15,7 +15,7 @@
                 <thead>
                     <tr>
                         <th><a href="formulario.php" class="btn btn-primary">Novo</a></th>
-                        <th>Cpf</th>
+                        <th>CPF</th>
                         <th>Nome</th>
                         <th>E-mail</th>                        
                      </tr>                                       
