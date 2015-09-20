@@ -7,26 +7,25 @@ class UsuarioProcessa{
             if (method_exists($this, $_GET['acao']))
                call_user_func (array($this, $_GET['acao']));
             else{
-               die ('<div style="text-align: center" class="alert alert-danger" role="alert"> <span>Ação cancelada, ação <b>'.$_GET['acao'].'</b> inexistente.</span></div>');
+               die ($this->getMsgErro('Ação <b>'.$_GET['acao'].'</b>inexistente.'));
              }
             
         }
    }
-   public function salvar(){
-      //Valida dados
-      $usuario = $_POST;
-      $cpf = $_GET['cpf'];
-      $novo = false;
-      if (!isset($cpf)){
-        $cpf = $usuario['cpf'];
-        $novo = true;           
-      }
-      echo 'TESTE '. json_encode($usuario);
-      if (strlen($cpf)!= 11 || ! is_numeric($cpf))
-            die('<div style="text-align: center" class="alert alert-danger" role="alert"> <span>Digite um CPF válido</span></div>');
-        // die termina a execução da aplicação processa.php no momento que é acionado.      
 
-      if ($novo){
+    public function salvar(){
+        //Valida dados
+        $usuario = $_POST;
+      
+        $cpf = $usuario['cpf'];
+      
+        if (strlen($cpf)!= 11 || ! is_numeric($cpf)){
+            die($this->getMsgErro('Digite um CPF válido'));
+            // die termina a execução da aplicação processa.php no momento que é acionado.      
+        }
+      $usuario_alterado = $this->buscar_usuario($cpf);           
+
+      if ($usuario_alterado['cpf'] != $cpf){
         $arquivo = fopen($this->caminho_arquivo, 'a+');
 
         /*foreach ($usuario as $atributos ){
@@ -63,7 +62,7 @@ class UsuarioProcessa{
       }
       
       //Redirecionar para a página lista.php
-      header('Location: lista.php');
+      //header('Location: lista.php');
       
    }
    public function buscar_todos(){
@@ -100,13 +99,33 @@ class UsuarioProcessa{
        return $usuario;
        
    }
-   public function excluir(){
+   public function excluir_usuario(){
       //Iniciar sessão
-      session_start();
+      //session_start();
 
       // Deletar do array
       $cpf = $_GET['cpf'];
-      unset($_SESSION['usuarios'][$cpf]);
+      //unset($_SESSION['usuarios'][$cpf]);
+      $arquivo = fopen($this->caminho_arquivo, 'r+');
+        if ($arquivo){
+            $novoarquivo = '';
+            while (!feof($arquivo)){
+                $linha = fgets($arquivo);
+                $usuario_linha = explode(';', $linha);
+                if ($usuario_linha[3] != $cpf)                     
+                    $novoarquivo .= $linha;
+            }
+            //Volta o cursor para o inicio do arquivo
+            rewind($arquivo);
+            // truca o arquivo apagando tudo dentro dele
+            ftruncate($arquivo, 0);
+            // reescreve o conteudo dentro do arquivo
+            fwrite($arquivo, $novoarquivo);
+
+            fclose($arquivo);
+
+        }
+      header('Location: lista.php');
    }
    private function fabricaUsuario($email, $senha, $nome, $cpf, $endereco, $numero, $bairro, $cidade,$cep, $uf ){
        return ['email'=> $email, 
@@ -121,6 +140,17 @@ class UsuarioProcessa{
            'uf'=>$uf
            ];
        
+   }
+   private function getMsgErro($msg){
+       $mensagem = '';
+       $mensagem .= '<div style="text-align: center; max-width: 600px; margin-left: auto; margin-right: auto;" class="alert alert-danger" role="alert"> '
+                       . '<h4>Ação cancelada</h4>'
+                       . '<p>'.$msg.'</p>'
+                       . '<p>'
+                       .    '<button type="button" class="btn btn-danger">Voltar</button>'
+                       . '</p>'
+                  . '</div>';
+       return $mensagem;
    }
    
 }
