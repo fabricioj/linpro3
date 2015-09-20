@@ -1,9 +1,11 @@
 <?php
    $pag_header = 'Usuários';
-   include '../includes/cabecalho.php';
+   //include '../includes/cabecalho.php';
    
-   session_start();
-   $usuarios = isset($_SESSION['usuarios'])? $_SESSION['usuarios'] : array();   
+   //session_start();
+   //$usuarios = isset($_SESSION['usuarios'])? $_SESSION['usuarios'] : array();   
+   require_once '../usuarios/processa.php';
+   $usuarios = $usuario_todos->buscar_todos();
 ?>
 
         <div class="container">

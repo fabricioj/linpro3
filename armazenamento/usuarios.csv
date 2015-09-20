@@ -1,2 +1,4 @@
 Email;Senha;Nome;Cpf;Endereco;Numero;Bairro;Cidade;Cep;Uf
-fabricioj_santos@hotmail.com;123;Fabricio José dos Santos;99999999999;Rua Teste;1936;Jd Marina;São Joaquim da Barra;123123;SP
+fabricioj_santos@hotmail.com;123;Fabricio José dos Santos;99999999999;Rua Teste;1936;Jd Marina;123123;São Joaquim da Barra;SP
+fabricioj_santos@hotmail.com;123;Fabricio José dos Santos;11111111111;teste321;321;Jd Marina;123123;Morro Agudo;SP
+foda-se@gmail.com;321;teste;00000000022;teste321;312;123123;Morro Agudo;123123;SP
