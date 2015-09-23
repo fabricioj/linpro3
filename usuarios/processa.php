@@ -136,6 +136,40 @@ class UsuarioProcessa{
         }
       header('Location: lista.php');
    }
+   public function buscar_filtros (){
+        if(isset($_GET['usuario_nome']))
+            $nome_filtro = $_GET['usuario_nome'];
+        else
+            $nome_filtro = '';
+        $arquivo     = fopen($this->caminho_arquivo, 'r');
+        $usuario     = [];
+        $usuarios    = [];
+
+        $i = 0;
+         while (!feof($arquivo)){
+             $linha   = fgets($arquivo);
+             if ($linha != ''){
+                 $usuario = explode(';', $linha);
+                 if ($i > 0){                    
+                     $add = false;
+                     if ($nome_filtro != ''){
+                        if (strpos($usuario[2], $nome_filtro) !== FALSE && strpos($usuario[2], $nome_filtro, 0) > -1){                    
+                            $add = true;
+                        }
+                     }else{
+                         $add = true;                         
+                     }
+                     if ($add)
+                        $usuarios[] = $this->fabricaUsuario($usuario[0], $usuario[1], $usuario[2], $usuario[3], $usuario[4], $usuario[5], $usuario[6], $usuario[7], $usuario[8], $usuario[9]);
+                 }               
+
+             }
+             $i ++;
+         }
+        fclose($arquivo);
+        return $usuarios;
+       
+   }
    private function fabricaUsuario($email, $senha, $nome, $cpf, $endereco, $numero, $bairro, $cidade,$cep, $uf ){
        return ['email'=> $email, 
            'senha' => $senha, 
