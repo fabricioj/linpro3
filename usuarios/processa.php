@@ -34,7 +34,7 @@ class UsuarioProcessa{
 
         $linha = implode(";", $usuario);
 
-        fwrite($arquivo, "\n{$linha}");
+        fwrite($arquivo, "{$linha}\n");
         fclose($arquivo);
       }else{
           
@@ -45,7 +45,7 @@ class UsuarioProcessa{
                 $linha = fgets($arquivo);
                 $usuario_linha = explode(';', $linha);
                 if ($usuario_linha[3] == $cpf)
-                    $novoarquivo.= implode(';', $usuario);
+                    $novoarquivo.= implode(';', $usuario)."\n";
                 else 
                     $novoarquivo .= $linha;
             }
@@ -62,7 +62,7 @@ class UsuarioProcessa{
       }
       
       //Redirecionar para a página lista.php
-      //header('Location: lista.php');
+      header('Location: lista.php');
       
    }
    public function buscar_todos(){
@@ -71,14 +71,17 @@ class UsuarioProcessa{
        $usuarios    = [];
        
        $i = 0;
-       while (!feof($arquivo)){
-           $linha   = fgets($arquivo);
-           $usuario = explode(';', $linha);
-           if ($i > 0){
-               $usuarios[] = $this->fabricaUsuario($usuario[0], $usuario[1], $usuario[2], $usuario[3], $usuario[4], $usuario[5], $usuario[6], $usuario[7], $usuario[8], $usuario[9]);
-           }
-           $i ++;
-       }
+        while (!feof($arquivo)){
+            $linha   = fgets($arquivo);
+            if ($linha != ''){
+                $usuario = explode(';', $linha);
+                if ($i > 0){
+                    $usuarios[] = $this->fabricaUsuario($usuario[0], $usuario[1], $usuario[2], $usuario[3], $usuario[4], $usuario[5], $usuario[6], $usuario[7], $usuario[8], $usuario[9]);
+                }               
+
+            }
+            $i ++;
+        }
        fclose($arquivo);
        return $usuarios;
    }
@@ -104,8 +107,10 @@ class UsuarioProcessa{
       //session_start();
 
       // Deletar do array
+       //unset($_SESSION['usuarios'][$cpf]);
+       
       $cpf = $_GET['cpf'];
-      //unset($_SESSION['usuarios'][$cpf]);
+      
       $arquivo = fopen($this->caminho_arquivo, 'r+');
         if ($arquivo){
             $novoarquivo = '';
@@ -116,14 +121,18 @@ class UsuarioProcessa{
                     $novoarquivo .= $linha;
             }
             //Volta o cursor para o inicio do arquivo
-            rewind($arquivo);
+            //rewind($arquivo);
             // truca o arquivo apagando tudo dentro dele
-            ftruncate($arquivo, 0);
+            //ftruncate($arquivo, 0);
             // reescreve o conteudo dentro do arquivo
-            fwrite($arquivo, $novoarquivo);
+            //fwrite($arquivo, $novoarquivo);
 
             fclose($arquivo);
-
+            unlink($this->caminho_arquivo);
+            
+            $arquivo = fopen($this->caminho_arquivo, 'a+');
+            fwrite($arquivo, $novoarquivo);
+            fclose($arquivo);
         }
       header('Location: lista.php');
    }
