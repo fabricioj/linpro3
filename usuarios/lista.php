@@ -44,17 +44,22 @@
             </thead>
             <tbody>
                 <?php 
-                foreach ( $usuarios as $usuario) :?>
-                    <tr>
-                        <td>
-                            <a href="formulario.php?cpf=<?php echo $usuario['cpf'];?>" class="btn btn-primary">Editar</a>
-                            <a href="processa.php?acao=excluir_usuario&cpf=<?php echo $usuario['cpf'];?>" class="btn btn-danger">Excluir</a>                        
-                        </td>
-                        <td><?php echo $usuario['cpf']?></td>
-                        <td><?php echo $usuario['nome']?></td>
-                        <td><?php echo $usuario['email']?></td>
-                    </tr>
-                <?php endforeach; ?>
+                $i = 0;
+                foreach ( $usuarios as $usuario) :
+                    if ($i > 0){?>
+                        <tr>
+                            <td>
+                                <a href="formulario.php?cpf=<?php echo $usuario['cpf'];?>" class="btn btn-primary">Editar</a>
+                                <a href="processa.php?acao=excluir_usuario&cpf=<?php echo $usuario['cpf'];?>" class="btn btn-danger">Excluir</a>                        
+                            </td>
+                            <td><?php echo $usuario['cpf']?></td>
+                            <td><?php echo $usuario['nome']?></td>
+                            <td><?php echo $usuario['email']?></td>
+                        </tr>
+                <?php                    
+                    }
+                    $i++;
+                endforeach; ?>
 
             </tbody>
 

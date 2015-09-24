@@ -25,11 +25,10 @@ class UsuarioProcessa{
         }
         $achou = false;
         $primeira = true;
-        $usuarios = $this->buscar_todos();        
+        $usuarios = $this->buscar_filtros();        
         $arquivo = fopen($this->caminho_arquivo, 'w');
         
         foreach($usuarios as $usuario_item){
-            echo implode(';', $usuario_item);
             if ($usuario_item['cpf']== $cpf){
                 fwrite($arquivo, (!$primeira? "\n": "" ). str_replace("\n", "", implode(';', $usuario)));
                 $achou = true;
@@ -43,71 +42,10 @@ class UsuarioProcessa{
             fwrite($arquivo, "\n".implode(';', $usuario));
         }
         fclose($arquivo);
-        
-      /*$usuario_alterado = $this->buscar_usuario($cpf);           
-      
-      if ($usuario_alterado['cpf'] != $cpf){
-        $arquivo = fopen($this->caminho_arquivo, 'a+');
-
-        /*foreach ($usuario as $atributos ){
-           $linha .= ($linha != "" ? ";" : ""). $atributos;        
-        }
-
-        $linha = implode(";", $usuario);
-
-        fwrite($arquivo, "{$linha}\n");
-        fclose($arquivo);
-      }else{
-          
-          $arquivo = fopen($this->caminho_arquivo, 'r+');
-          if ($arquivo){
-            $novoarquivo = '';
-            while (!feof($arquivo)){
-                $linha = fgets($arquivo);
-                $usuario_linha = explode(';', $linha);
-                if ($usuario_linha[3] == $cpf)
-                    $novoarquivo.= implode(';', $usuario)."\n";
-                else 
-                    $novoarquivo .= $linha;
-            }
-            //Volta o cursor para o inicio do arquivo
-            rewind($arquivo);
-            // truca o arquivo apagando tudo dentro dele
-            ftruncate($arquivo, 0);
-            // reescreve o conteudo dentro do arquivo
-            fwrite($arquivo, $novoarquivo);
-
-            fclose($arquivo);
-
-          }
-      }*/
       
       //Redirecionar para a página lista.php
       header('Location: lista.php');
       
-   }
-   public function buscar_todos(){
-       $arquivo     = fopen($this->caminho_arquivo, 'r');
-       $usuario     = [];
-       $usuarios    = [];
-       
-       $i = 0;
-        while (!feof($arquivo)){
-            $linha   = fgets($arquivo);
-            $linha = str_replace("\n", "", $linha);
-            
-            if ($linha != ''){                
-                $usuario = explode(';', $linha);
-                
-                //if ($i > 0){
-                    $usuarios[] = $this->fabricaUsuario($usuario[0], $usuario[1], $usuario[2], $usuario[3], $usuario[4], $usuario[5], $usuario[6], $usuario[7], $usuario[8], $usuario[9]);
-                //}               
-
-            }
-            $i ++;
-        }
-       fclose($arquivo);
-       return $usuarios;
    }
    public function buscar_usuario($cpf){
        $arquivo     = fopen($this->caminho_arquivo, 'r');
@@ -142,7 +80,7 @@ class UsuarioProcessa{
              $linha   = fgets($arquivo);
              if ($linha != ''){
                  $usuario = explode(';', $linha);
-                 if ($i > 0){                    
+                 //if ($i > 0){
                      $add = false;
                      if ($nome_filtro != ''){
                         if (strpos($usuario[2], $nome_filtro) !== FALSE && strpos($usuario[2], $nome_filtro, 0) > -1){                    
@@ -161,7 +99,7 @@ class UsuarioProcessa{
                      if ($add){
                         $usuarios[] = $this->fabricaUsuario($usuario[0], $usuario[1], $usuario[2], $usuario[3], $usuario[4], $usuario[5], $usuario[6], $usuario[7], $usuario[8], $usuario[9]);
                      }
-                 }               
+                 //}               
 
              }
              $i ++;
@@ -170,33 +108,23 @@ class UsuarioProcessa{
         return $usuarios;
        
    }
-   public function excluir_usuario(){
-      //Iniciar sessão
-      //session_start();
+   public function excluir_usuario(){       
+        $cpf = $_GET['cpf'];
+        
+        $usuarios = $this->buscar_filtros();        
+        $arquivo = fopen($this->caminho_arquivo, 'w');
 
-      // Deletar do array
-       //unset($_SESSION['usuarios'][$cpf]);
-       
-      $cpf = $_GET['cpf'];
-      
-      $arquivo = fopen($this->caminho_arquivo, 'r+');
-        if ($arquivo){
-            $novoarquivo = '';
-            while (!feof($arquivo)){
-                $linha = fgets($arquivo);
-                $usuario_linha = explode(';', $linha);
-                if ($usuario_linha[3] != $cpf)                     
-                    $novoarquivo .= $linha;
+        $primeira = true;
+        foreach($usuarios as $usuario_item){
+            if ($usuario_item['cpf'] !== $cpf){
+                fwrite($arquivo, (!$primeira? "\n": "" ). str_replace("\n", "", implode(';', $usuario_item)));
             }
-
-            fclose($arquivo);
-            unlink($this->caminho_arquivo);
-            
-            $arquivo = fopen($this->caminho_arquivo, 'a+');
-            fwrite($arquivo, $novoarquivo);
-            fclose($arquivo);
+            $primeira = false;
         }
-      header('Location: lista.php');
+        
+        fclose($arquivo);
+
+        header('Location: lista.php');
    }
    private function fabricaUsuario($email, $senha, $nome, $cpf, $endereco, $numero, $bairro, $cidade,$cep, $uf ){
        return ['email'=> $email, 
@@ -218,7 +146,7 @@ class UsuarioProcessa{
                        . '<h4>Ação cancelada</h4>'
                        . '<p>'.$msg.'</p>'
                        . '<p>'
-                       .    '<button type="button" class="btn btn-danger">Voltar</button>'
+                       .    '<button type="button" class="btn btn-danger" onclick="window.history.back();">Voltar</button>'
                        . '</p>'
                   . '</div>';
        return $mensagem;
