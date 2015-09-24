@@ -23,14 +23,35 @@ class UsuarioProcessa{
             die($this->getMsgErro('Digite um CPF válido'));
             // die termina a execução da aplicação processa.php no momento que é acionado.      
         }
-      $usuario_alterado = $this->buscar_usuario($cpf);           
-
+        $achou = false;
+        $primeira = true;
+        $usuarios = $this->buscar_todos();        
+        $arquivo = fopen($this->caminho_arquivo, 'w');
+        
+        foreach($usuarios as $usuario_item){
+            echo implode(';', $usuario_item);
+            if ($usuario_item['cpf']== $cpf){
+                fwrite($arquivo, (!$primeira? "\n": "" ). str_replace("\n", "", implode(';', $usuario)));
+                $achou = true;
+            }else{
+                fwrite($arquivo, (!$primeira? "\n": "" ). str_replace("\n", "", implode(';', $usuario_item)));
+            }
+            $primeira = false;
+        }
+        if (!$achou){
+            $arquivo = fopen($this->caminho_arquivo, 'a+');
+            fwrite($arquivo, "\n".implode(';', $usuario));
+        }
+        fclose($arquivo);
+        
+      /*$usuario_alterado = $this->buscar_usuario($cpf);           
+      
       if ($usuario_alterado['cpf'] != $cpf){
         $arquivo = fopen($this->caminho_arquivo, 'a+');
 
         /*foreach ($usuario as $atributos ){
            $linha .= ($linha != "" ? ";" : ""). $atributos;        
-        }*/
+        }
 
         $linha = implode(";", $usuario);
 
@@ -59,7 +80,7 @@ class UsuarioProcessa{
             fclose($arquivo);
 
           }
-      }
+      }*/
       
       //Redirecionar para a página lista.php
       header('Location: lista.php');
@@ -73,11 +94,14 @@ class UsuarioProcessa{
        $i = 0;
         while (!feof($arquivo)){
             $linha   = fgets($arquivo);
-            if ($linha != ''){
+            $linha = str_replace("\n", "", $linha);
+            
+            if ($linha != ''){                
                 $usuario = explode(';', $linha);
-                if ($i > 0){
+                
+                //if ($i > 0){
                     $usuarios[] = $this->fabricaUsuario($usuario[0], $usuario[1], $usuario[2], $usuario[3], $usuario[4], $usuario[5], $usuario[6], $usuario[7], $usuario[8], $usuario[9]);
-                }               
+                //}               
 
             }
             $i ++;
@@ -91,6 +115,8 @@ class UsuarioProcessa{
        
        while (!feof($arquivo)){
            $linha   = fgets($arquivo);
+           $linha = str_replace("\n", "", $linha);
+           
            $usuario_lista = explode(';', $linha);
            if ($usuario_lista[3] == $cpf){
                $usuario = $this->fabricaUsuario($usuario_lista[0], $usuario_lista[1], $usuario_lista[2], $usuario_lista[3], $usuario_lista[4], $usuario_lista[5], $usuario_lista[6], $usuario_lista[7], $usuario_lista[8], $usuario_lista[9]);
@@ -100,6 +126,48 @@ class UsuarioProcessa{
        }
        fclose($arquivo);
        return $usuario;
+       
+   }
+   public function buscar_filtros (){
+        
+        $nome_filtro = isset($_GET['usuario_nome'])? $_GET['usuario_nome']:'';
+        $cpf_filtro =  isset($_GET['usuario_cpf'])? $_GET['usuario_cpf']:'';
+        
+        $arquivo     = fopen($this->caminho_arquivo, 'r');
+        $usuario     = [];
+        $usuarios    = [];
+
+        $i = 0;
+         while (!feof($arquivo)){
+             $linha   = fgets($arquivo);
+             if ($linha != ''){
+                 $usuario = explode(';', $linha);
+                 if ($i > 0){                    
+                     $add = false;
+                     if ($nome_filtro != ''){
+                        if (strpos($usuario[2], $nome_filtro) !== FALSE && strpos($usuario[2], $nome_filtro, 0) > -1){                    
+                            $add = true;
+                        }
+                     }else{
+                         $add = true;                         
+                     }
+                     if ($cpf_filtro != ''){
+                        if ($usuario[3] == $cpf_filtro && $add){                    
+                            $add = true;
+                        } else{
+                            $add = false;
+                        }
+                     }
+                     if ($add){
+                        $usuarios[] = $this->fabricaUsuario($usuario[0], $usuario[1], $usuario[2], $usuario[3], $usuario[4], $usuario[5], $usuario[6], $usuario[7], $usuario[8], $usuario[9]);
+                     }
+                 }               
+
+             }
+             $i ++;
+         }
+        fclose($arquivo);
+        return $usuarios;
        
    }
    public function excluir_usuario(){
@@ -120,12 +188,6 @@ class UsuarioProcessa{
                 if ($usuario_linha[3] != $cpf)                     
                     $novoarquivo .= $linha;
             }
-            //Volta o cursor para o inicio do arquivo
-            //rewind($arquivo);
-            // truca o arquivo apagando tudo dentro dele
-            //ftruncate($arquivo, 0);
-            // reescreve o conteudo dentro do arquivo
-            //fwrite($arquivo, $novoarquivo);
 
             fclose($arquivo);
             unlink($this->caminho_arquivo);
@@ -135,40 +197,6 @@ class UsuarioProcessa{
             fclose($arquivo);
         }
       header('Location: lista.php');
-   }
-   public function buscar_filtros (){
-        if(isset($_GET['usuario_nome']))
-            $nome_filtro = $_GET['usuario_nome'];
-        else
-            $nome_filtro = '';
-        $arquivo     = fopen($this->caminho_arquivo, 'r');
-        $usuario     = [];
-        $usuarios    = [];
-
-        $i = 0;
-         while (!feof($arquivo)){
-             $linha   = fgets($arquivo);
-             if ($linha != ''){
-                 $usuario = explode(';', $linha);
-                 if ($i > 0){                    
-                     $add = false;
-                     if ($nome_filtro != ''){
-                        if (strpos($usuario[2], $nome_filtro) !== FALSE && strpos($usuario[2], $nome_filtro, 0) > -1){                    
-                            $add = true;
-                        }
-                     }else{
-                         $add = true;                         
-                     }
-                     if ($add)
-                        $usuarios[] = $this->fabricaUsuario($usuario[0], $usuario[1], $usuario[2], $usuario[3], $usuario[4], $usuario[5], $usuario[6], $usuario[7], $usuario[8], $usuario[9]);
-                 }               
-
-             }
-             $i ++;
-         }
-        fclose($arquivo);
-        return $usuarios;
-       
    }
    private function fabricaUsuario($email, $senha, $nome, $cpf, $endereco, $numero, $bairro, $cidade,$cep, $uf ){
        return ['email'=> $email, 
